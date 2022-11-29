@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 12,
     fontFamily: "Inter-Medium",
-    fontWeight: "2s00",
+    fontWeight: "200",
     color: "white",
   },
 });
@@ -38,12 +38,7 @@ const SunInfo = ({ props }) => {
 
   return (
     <View style={styles.subContainer}>
-      <Image
-        style={styles.img}
-        source={require(props.icon_id === 1
-          ? `./../assets/weather_icon/sunrine.svg`
-          : `./../assets/weather_icon/sunset.svg`)}
-      ></Image>
+
       <Text style={styles.string}>
         {props.icon_id === 2
           ? date.getHours().toString() + ":" + date.getMinutes().toString()

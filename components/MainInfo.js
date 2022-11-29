@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 12,
     fontFamily: "Inter-Medium",
-    fontWeight: "2s00",
+    fontWeight: "200",
     color: "white",
   },
 });
@@ -37,14 +37,7 @@ const MainInfo = ({ props }) => {
 
   return (
     <View style={styles.subContainer}>
-      <Image
-        style={styles.img}
-        source={require(props.icon_id === 1
-          ? `./../assets/weather_icon/higher.svg`
-          : props.icon_id === 2
-          ? `./../assets/weather_icon/lowest.svg`
-          : `./../assets/weather_icon/windsock.svg`)}
-      ></Image>
+
       <Text style={styles.string}>
         {Math.floor(parseInt(props.temp_max)).toString() + unit}
       </Text>
