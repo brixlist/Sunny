@@ -1,25 +1,22 @@
-import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 
 import { useState, useEffect } from "react";
 
 import axios from "axios";
 
-import { StyleSheet, Text, View, SafeAreaView, Image } from "react-native";
-
-import AssetsData from "./data/AssetsData";
-
-import MainInfo from "./components/MainInfo";
-import SunInfo from "./components/SunInfo";
+import LoadingPage from "./pages/LoadingPage";
+import MainPage from "./pages/MainPage";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
     "Inter-Black": require("./assets/fonts/Inter-Black.otf"),
     "Inter-Medium": require("./assets/fonts/Inter-Medium.otf"),
     "Inter-Thin": require("./assets/fonts/Inter-Thin.otf"),
+    "Inter-Regular": require("./assets/fonts/Inter-Regular.otf"),
   });
+
   const [data, setData] = useState({ cod: 500 });
-  const [img, setImg] = useState(require(`./assets/weather_icon/unknown.png`));
+  const [bgColor, setBgColor] = useState("#fff");
 
   const getWeather = async (lat, long) => {
     try {
@@ -27,9 +24,35 @@ export default function App() {
       const resp = await axios.get(api_call);
       setData(resp.data);
 
-      let s = AssetsData.filter((a) => a.code === resp.data.weather[0].icon);
-      console.log(s);
-      setImg(s[0].img);
+      let x = resp.data.weather[0].id;
+  
+      switch (true) {
+        case x >= 200 && x <= 232:
+          setBgColor("#707070");
+          break;
+        case x >= 300 && x <= 321:
+          setBgColor("#d9d9d9");
+          break;
+        case x >= 500 && x <= 531:
+          setBgColor("#007CBE");
+          break;
+        case x >= 600 && x <= 622:
+          setBgColor("white");
+          break;
+        case x >= 701 && x <= 781:
+          setBgColor("gray");
+          break;
+        case 800:
+          setBgColor("#FDF2CD");
+          break;
+        case x >= 801 && x <= 804:
+          console.log("ciao");
+          setBgColor("#e9ecef");
+          break;
+        default:
+          setBgColor("white");
+          break;
+      }
     } catch (err) {
       console.log(err);
     }
@@ -55,138 +78,13 @@ export default function App() {
     <>
       {data.cod === 500 ? (
         <>
-          <View style={loadingStyles.loadingContainer}>
-            <Text style={loadingStyles.loadingTitle}>Loading data...</Text>
-          </View>
+          <LoadingPage />
         </>
       ) : (
         <>
-          <SafeAreaView style={{ flex: 1 }}>
-            <View style={mainStyles.mainContaier}>
-              <View style={mainStyles.topContainer}>
-                <Text style={childStyles.locationItem}>
-                  {data.name.toString().toUpperCase()}
-                </Text>
-              </View>
-              <View style={mainStyles.imgContainer}>
-                <Image
-                  style={childStyles.img}
-                  source={img}
-                ></Image>
-                <Text style={childStyles.tempString}>
-                  {"its " + data.weather[0].main.toString()}
-                </Text>
-                <Text style={childStyles.tempItem}>
-                  {Math.floor(parseInt(data.main.temp)) + "°"}
-                </Text>
-              </View>
-              <View style={mainStyles.bottomContainer}>
-                <MainInfo
-                  props={{
-                    temp_max: data.main.temp_max,
-                    icon_id: 1,
-                    string: `Temp Max`,
-                  }}
-                />
-                <MainInfo
-                  props={{
-                    temp_max: data.main.temp_min,
-                    icon_id: 2,
-                    string: `Temp Min`,
-                  }}
-                />
-                <MainInfo
-                  props={{
-                    temp_max: data.wind.speed,
-                    icon_id: 3,
-                    string: `Wind speed`,
-                  }}
-                />
-              </View>
-              <View style={mainStyles.bottomContainer}>
-                <SunInfo
-                  props={{
-                    value: data.sys.sunrise,
-                    icon_id: 1,
-                    string: "Sunrise",
-                  }}
-                />
-                <SunInfo
-                  props={{
-                    value: data.sys.sunset,
-                    icon_id: 2,
-                    string: "Sunset",
-                  }}
-                />
-              </View>
-            </View>
-            <StatusBar style="auto" />
-          </SafeAreaView>
+          <MainPage props={{ info: data, color: bgColor}} />
         </>
       )}
     </>
   );
 }
-
-const loadingStyles = StyleSheet.create({
-  loadingContainer: {
-    flex: 1,
-    backgroundColor: "#0B0C1D",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  loadingTitle: {
-    color: "white",
-    fontFamily: "Inter-Medium",
-    fontSize: 24,
-  },
-});
-
-const mainStyles = StyleSheet.create({
-  mainContaier: {
-    flex: 1,
-    padding: 20,
-    flexDirection: "column",
-    backgroundColor: "white",
-  },
-  topContainer: {
-    alignItems: "center",
-    paddingTop: 6,
-  },
-  imgContainer: {
-    paddingTop: 20,
-    alignItems: "center",
-  },
-  bottomContainer: {
-    paddingTop: 10,
-    flexDirection: "row",
-    paddingHorizontal: 10,
-  },
-});
-
-const childStyles = StyleSheet.create({
-  locationItem: {
-    fontWeight: "600",
-    fontFamily: "Inter-Medium",
-    fontSize: 24,
-    color: "black",
-  },
-  tempItem: {
-    paddingTop: 10,
-    fontWeight: "900",
-    fontFamily: "Inter-Medium",
-    fontSize: 82,
-    color: "black",
-  },
-  img: {
-    width: 200,
-    height: 200,
-    justifyContent: "center",
-  },
-  tempString: {
-    fontSize: 32,
-    fontWeight: "700",
-    fontFamily: "Inter-Medium",
-    color: "black",
-  },
-});
