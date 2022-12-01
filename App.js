@@ -7,6 +7,8 @@ import axios from "axios";
 import LoadingPage from "./pages/LoadingPage";
 import MainPage from "./pages/MainPage";
 
+import * as SplashScreen from 'expo-splash-screen';
+
 export default function App() {
   const [fontsLoaded] = useFonts({
     "Inter-Black": require("./assets/fonts/Inter-Black.otf"),
@@ -27,6 +29,9 @@ export default function App() {
       let x = resp.data.weather[0].id;
   
       switch (true) {
+        case  x === 800:
+          setBgColor('#FDF2CD');
+          break;
         case x >= 200 && x <= 232:
           setBgColor("#707070");
           break;
@@ -71,8 +76,19 @@ export default function App() {
   };
 
   useEffect(() => {
+    async function prepare() {
+      await SplashScreen.preventAutoHideAsync();
+    }
+
     getLogLat();
+    prepare();
   }, []);
+
+  if(!fontsLoaded) {
+    return undefined;
+  } else {
+    SplashScreen.hideAsync();
+  }
 
   return (
     <>

@@ -1,9 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, SafeAreaView, Image } from "react-native";
 
-import { Droplet, Wind, Sunset } from "lucide-react-native";
-
-import { useEffect, useState } from "react";
+import { Droplet, Wind, Sunset, MapPin } from "lucide-react-native";
 
 import SvgMedia from "../component/SvgMedia";
 
@@ -25,6 +23,13 @@ const styles = StyleSheet.create({
     paddingTop: 130,
     justifyContent: "center",
     alignItems: "flex-start",
+    flexDirection: "row",
+  },
+  footer: {
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    justifyContent: "center",
+    alignItems: "center",
     flexDirection: "row",
   },
 });
@@ -59,10 +64,16 @@ const items = StyleSheet.create({
     fontSize: 12,
     paddingTop: 12,
   },
+  locationText: {
+    fontFamily: "Inter-Medium",
+    fontWeight: "400",
+    fontSize: 22,
+    paddingLeft: 6,
+  }
 });
 
 const MainPage = ({ props }) => {
-  console.log(props)
+  console.log(props);
   const data = props.info;
   const date = new Date(data.sys.sunset + 1000);
 
@@ -102,7 +113,10 @@ const MainPage = ({ props }) => {
             </View>
           </View>
         </View>
-        {/*<View><Text>footer</Text></View>*/}
+        <View style={styles.footer}>
+          <MapPin stroke="black" size={26} />
+          <Text style={items.locationText}>{data.name.toString()}</Text>
+        </View>
         <StatusBar style="auto" />
       </SafeAreaView>
     </>
