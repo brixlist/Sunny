@@ -18,20 +18,22 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "prova"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.filippo_brigati.sunny"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "4d2a6618-aa02-4d5a-ad2c-7b99b4c906dc"
+        "projectId": "3e3082fc-d6ec-47f3-a01e-eeafa4c06041"
       }
     },
     "owner": "filippo_brigati"

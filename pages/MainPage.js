@@ -1,9 +1,17 @@
+import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, SafeAreaView, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  Pressable,
+} from "react-native";
 
 import { Droplet, Wind, Sunset, MapPin } from "lucide-react-native";
 
 import SvgMedia from "../component/SvgMedia";
+import Modal from "../component/Modal";
 
 const styles = StyleSheet.create({
   main: {
@@ -35,6 +43,11 @@ const styles = StyleSheet.create({
 });
 
 const items = StyleSheet.create({
+  headerText: {
+    fontFamily: "Inter-Regular",
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
   temp: {
     fontFamily: "Inter-Regular",
     fontSize: 218,
@@ -69,20 +82,28 @@ const items = StyleSheet.create({
     fontWeight: "400",
     fontSize: 22,
     paddingLeft: 6,
-  }
+  },
 });
 
 const MainPage = ({ props }) => {
-  console.log(props);
+  const [modalVisible, setModalVisible] = useState(false);
   const data = props.info;
   const date = new Date(data.sys.sunset + 1000);
+  const backgroudColor = props.color;
 
-  console.log(data);
+  //console.log(data);
+  
+  const changeModalState = (value) => {
+    setModalVisible(value);
+  }
+  
   return (
     <>
       <SafeAreaView style={{ flex: 1, backgroundColor: props.color }}>
         <View style={[styles.main, { backgroundColor: props.color }]}>
+          <Modal value={[{ modalVisible, changeModalState }, backgroudColor]} />
           <View style={styles.top}>
+            <Text style={items.headerText}>Current Weather:</Text>
             <View style={items.subTop}>
               <Text style={items.temp}>
                 {Math.floor(parseInt(data.main.temp)) + "°"}
@@ -113,10 +134,10 @@ const MainPage = ({ props }) => {
             </View>
           </View>
         </View>
-        <View style={styles.footer}>
+        <Pressable style={styles.footer} onPress={() => setModalVisible(true)}>
           <MapPin stroke="black" size={26} />
           <Text style={items.locationText}>{data.name.toString()}</Text>
-        </View>
+        </Pressable>
         <StatusBar style="auto" />
       </SafeAreaView>
     </>

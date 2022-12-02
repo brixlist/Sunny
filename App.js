@@ -7,7 +7,7 @@ import axios from "axios";
 import LoadingPage from "./pages/LoadingPage";
 import MainPage from "./pages/MainPage";
 
-import * as SplashScreen from 'expo-splash-screen';
+import * as SplashScreen from "expo-splash-screen";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -15,6 +15,7 @@ export default function App() {
     "Inter-Medium": require("./assets/fonts/Inter-Medium.otf"),
     "Inter-Thin": require("./assets/fonts/Inter-Thin.otf"),
     "Inter-Regular": require("./assets/fonts/Inter-Regular.otf"),
+    "Inter-Semibold": require("./assets/fonts/Inter-SemiBold.otf"),
   });
 
   const [data, setData] = useState({ cod: 500 });
@@ -26,17 +27,19 @@ export default function App() {
       const resp = await axios.get(api_call);
       setData(resp.data);
 
+      //DEGUG UI
+      //resp.data.weather[0].id = 803;
       let x = resp.data.weather[0].id;
-  
+
       switch (true) {
-        case  x === 800:
-          setBgColor('#FDF2CD');
+        case x === 800:
+          setBgColor("#FDF2CD");
           break;
         case x >= 200 && x <= 232:
-          setBgColor("#707070");
+          setBgColor("#00b4d8");
           break;
         case x >= 300 && x <= 321:
-          setBgColor("#d9d9d9");
+          setBgColor("#00b4d8");
           break;
         case x >= 500 && x <= 531:
           setBgColor("#007CBE");
@@ -45,13 +48,12 @@ export default function App() {
           setBgColor("white");
           break;
         case x >= 701 && x <= 781:
-          setBgColor("gray");
+          setBgColor("#ced4da");
           break;
         case 800:
           setBgColor("#FDF2CD");
           break;
         case x >= 801 && x <= 804:
-          console.log("ciao");
           setBgColor("#e9ecef");
           break;
         default:
@@ -84,7 +86,7 @@ export default function App() {
     prepare();
   }, []);
 
-  if(!fontsLoaded) {
+  if (!fontsLoaded) {
     return undefined;
   } else {
     SplashScreen.hideAsync();
@@ -98,7 +100,7 @@ export default function App() {
         </>
       ) : (
         <>
-          <MainPage props={{ info: data, color: bgColor}} />
+          <MainPage props={{ info: data, color: bgColor }} />
         </>
       )}
     </>
