@@ -10,12 +10,12 @@ const loadingStyles = StyleSheet.create({
   },
   loadingTitle: {
     color: "black",
-    fontFamily: "Inter-Thin",
+    fontFamily: "Inter-Black",
     fontSize: 12,
   },
   checkTitle: {
     color: "black",
-    fontFamily: "Inter-Thin",
+    fontFamily: "Inter-Regular",
     fontSize: 10,
     paddingTop: 6,
   },

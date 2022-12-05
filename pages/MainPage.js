@@ -1,17 +1,12 @@
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import {
-  StyleSheet,
-  Text,
-  View,
-  SafeAreaView,
-  Pressable,
-} from "react-native";
+import { StyleSheet, ScrollView, Text, View, SafeAreaView, Pressable } from "react-native";
 
 import { Droplet, Wind, Sunset, MapPin } from "lucide-react-native";
 
 import SvgMedia from "../component/SvgMedia";
 import Modal from "../component/Modal";
+import DayMain from "../component/DayMain";
 
 const styles = StyleSheet.create({
   main: {
@@ -22,16 +17,23 @@ const styles = StyleSheet.create({
     //justifyContent: 'center',
   },
   top: {
-    flex: 4,
+    flex: 7,
     //justifyContent: "center",
     alignItems: "center",
   },
   bottom: {
-    flex: 2,
-    paddingTop: 130,
+    flex: 1,
     justifyContent: "center",
     alignItems: "flex-start",
     flexDirection: "row",
+  },
+  nextDay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "flex-start",
+    flexDirection: "row",
+    padding: 6,
+    paddingTop: 36,
   },
   footer: {
     paddingHorizontal: 12,
@@ -46,7 +48,7 @@ const items = StyleSheet.create({
   headerText: {
     fontFamily: "Inter-Regular",
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   temp: {
     fontFamily: "Inter-Regular",
@@ -88,15 +90,15 @@ const items = StyleSheet.create({
 const MainPage = ({ props }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const data = props.info;
-  const date = new Date(data.sys.sunset + 1000);
+  const date = new Date(data.current.dt + 1000);
   const backgroudColor = props.color;
 
   //console.log(data);
-  
+
   const changeModalState = (value) => {
     setModalVisible(value);
-  }
-  
+  };
+
   return (
     <>
       <SafeAreaView style={{ flex: 1, backgroundColor: props.color }}>
@@ -106,22 +108,22 @@ const MainPage = ({ props }) => {
             <Text style={items.headerText}>Current Weather:</Text>
             <View style={items.subTop}>
               <Text style={items.temp}>
-                {Math.floor(parseInt(data.main.temp)) + "°"}
+                {Math.floor(parseInt(data.current.temp)) + "°"}
               </Text>
             </View>
             <View style={items.subBottom}>
-              <SvgMedia props={{ code: data.weather[0].id }} />
+              <SvgMedia props={{ code: data.current.weather[0].id, size: 380 }} />
             </View>
           </View>
           <View style={styles.bottom}>
             <View style={items.iconRow}>
               <Droplet color="black" size={32} />
-              <Text style={items.iconText}>{data.main.humidity + " %"}</Text>
+              <Text style={items.iconText}>{data.current.humidity + " %"}</Text>
             </View>
             <View style={items.iconRow}>
               <Wind color="black" size={32} />
               <Text style={items.iconText}>
-                {data.wind.speed.toString() + " km/h"}
+                {data.current.wind_speed.toString() + " km/h"}
               </Text>
             </View>
             <View style={items.iconRow}>
@@ -133,10 +135,19 @@ const MainPage = ({ props }) => {
               </Text>
             </View>
           </View>
+          <View style={styles.nextDay}>
+            <ScrollView horizontal={true}>
+              {data.daily.map((d) => {
+                return <DayMain key={d.dt} props={d} />;
+              })}
+            </ScrollView>
+          </View>
         </View>
         <Pressable style={styles.footer} onPress={() => setModalVisible(true)}>
           <MapPin stroke="black" size={26} />
-          <Text style={items.locationText}>{data.name.toString()}</Text>
+          <Text style={items.locationText}>
+            {/*data.name.toString()*/ "Your Location"}
+          </Text>
         </Pressable>
         <StatusBar style="auto" />
       </SafeAreaView>

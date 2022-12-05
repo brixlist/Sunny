@@ -8,6 +8,7 @@ import LoadingPage from "./pages/LoadingPage";
 import MainPage from "./pages/MainPage";
 
 import * as SplashScreen from "expo-splash-screen";
+import * as Location from 'expo-location';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -23,13 +24,15 @@ export default function App() {
 
   const getWeather = async (lat, long) => {
     try {
-      let api_call = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=metric&appid=d223d72ce260e9719c1aa55a155ffcf9`;
+      let api_call = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&units=metric&exclude=minutely,hourly&appid=d223d72ce260e9719c1aa55a155ffcf9`;
       const resp = await axios.get(api_call);
       setData(resp.data);
 
       //DEGUG UI
       //resp.data.weather[0].id = 803;
-      let x = resp.data.weather[0].id;
+      let x = resp.data.current.weather[0].id;
+      data.cod = 200;
+      console.log(x);
 
       switch (true) {
         case x === 800:
@@ -65,24 +68,22 @@ export default function App() {
     }
   };
 
-  const getLogLat = async () => {
-    try {
-      //HIDE API KEY
-      const resp = await axios.get(
-        "https://api.ipgeolocation.io/ipgeo?apiKey=2d879b54fca84128900e20b8852be500"
-      );
-      getWeather(resp.data.latitude, resp.data.longitude);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   useEffect(() => {
     async function prepare() {
       await SplashScreen.preventAutoHideAsync();
     }
+    (async () => {
+      
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
 
-    getLogLat();
+      let location = await Location.getCurrentPositionAsync({});
+      //console.log(location);
+      getWeather(location.coords.latitude, location.coords.longitude);
+    })();
     prepare();
   }, []);
 
